@@ -1,0 +1,27 @@
+#+title: Nine Ball Luck Simulation
+
+This repository simulates and explores the effects of luck on winning
+percentages in Nine Ball, comparing and contrasting different rule sets to see
+the effect the rule set has on those luck effects.
+
+See[[https://jm.dev/amplifying-returns-of-luck-in-apa-nine-ball][ The Amplifying Returns Of Luck In APA Nine Ball]] for a writeup on these
+simulations and the data.
+
+#+CAPTION: Better player winning percentage, set-match nine ball rules
+#+NAME:   fig:set-match
+[[./set-match-plot.png]]
+
+
+#+CAPTION: Better player winning percentage, APA nine ball rules
+#+NAME:   fig:apa-plot
+[[./apa-plot.png]]
+
+The above plots were generated from running simulated matches 131,072 times
+across 8 different configurations, for a total of 1,048,576 simulated matches of
+9 ball.
+
+To run it for yourself:
+
+#+BEGIN_SRC sh
+./script/run-sim.sh
+#+END_SRC
