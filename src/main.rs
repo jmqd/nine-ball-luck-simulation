@@ -145,7 +145,10 @@ impl<const N: usize> Agent for ApaNineBallPlayer<{ N }> {
     }
 }
 
-fn normal_nine_ball_simulation_alice_vs_john(luck_chance: f32, starting_player: usize) -> String {
+fn normal_nine_ball_simulation_alice_vs_john(
+    luck_chance: f32,
+    starting_player: usize,
+) -> Simulation {
     let halt_condition = |s: &Simulation| s.agents.iter().all(|a| a.state().queue.is_empty());
 
     let alice = NineBallPlayer {
@@ -194,23 +197,13 @@ fn normal_nine_ball_simulation_alice_vs_john(luck_chance: f32, starting_player: 
 
     let mut sim = Simulation::new(simulation_parameters_generator());
     sim.run();
-
-    sim.agents
-        .iter()
-        .find(|a| {
-            a.state()
-                .produced
-                .last()
-                .is_some_and(|m| m.interrupt.is_some())
-        })
-        .map(|a| a.state().id.clone())
-        .unwrap()
+    sim
 }
 
 fn nine_ball_apa_rules_simulation_alice_vs_john(
     luck_chance: f32,
     starting_player: usize,
-) -> String {
+) -> Simulation {
     let halt_condition = |s: &Simulation| s.agents.iter().all(|a| a.state().queue.is_empty());
 
     let alice = ApaNineBallPlayer {
@@ -264,8 +257,12 @@ fn nine_ball_apa_rules_simulation_alice_vs_john(
 
     let mut sim = Simulation::new(simulation_parameters_generator());
     sim.run();
+    sim
+}
 
-    sim.agents
+fn find_winner(simulation: &Simulation) -> String {
+    simulation
+        .agents
         .iter()
         .find(|a| {
             a.state()
@@ -285,17 +282,21 @@ fn main() -> Result<(), Error> {
     writeln!(&mut w, "luck_chance\tbetter_player_win_percent")?;
 
     for pct in [0.00, 0.20, 0.40, 0.50].into_iter() {
+        let mut innings = 0u64;
         let mut count: HashMap<String, u32> = HashMap::new();
         for _ in 0..131072 {
-            *count
-                .entry(nine_ball_apa_rules_simulation_alice_vs_john(
-                    pct,
-                    starting_player,
-                ))
-                .or_default() += 1;
+            let finished_simulation =
+                nine_ball_apa_rules_simulation_alice_vs_john(pct, starting_player);
+            let winner = find_winner(&finished_simulation);
 
+            innings += finished_simulation.time;
+
+            *count.entry(winner).or_default() += 1;
             starting_player ^= 1;
         }
+
+        eprintln!("Luck={}", pct);
+        eprintln!("Average Innings: {}", innings as f32 / 131072.0);
 
         writeln!(
             &mut w,
@@ -311,14 +312,13 @@ fn main() -> Result<(), Error> {
     for pct in [0.00, 0.20, 0.40, 0.50].into_iter() {
         let mut count: HashMap<String, u32> = HashMap::new();
         let mut starting_player = 0;
-        for _ in 0..131072 {
-            *count
-                .entry(normal_nine_ball_simulation_alice_vs_john(
-                    pct,
-                    starting_player,
-                ))
-                .or_default() += 1;
 
+        for _ in 0..131072 {
+            let finished_simulation =
+                normal_nine_ball_simulation_alice_vs_john(pct, starting_player);
+            let winner = find_winner(&finished_simulation);
+
+            *count.entry(winner).or_default() += 1;
             starting_player ^= 1;
         }
 
