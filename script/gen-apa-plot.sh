@@ -15,6 +15,8 @@ set key noenhanced
 set output '$outputfile'
 set yrange [-1:101]
 set xrange [0:55]
+set xlabel 'Opponent Chance of Luck'
+set ylabel 'Winning Percentage'
 set title '[APA Rules] Winning Percentage vs Luck Chance'
 set grid
 plot '$datafile' using 1:2 with lines linestyle 1, \
