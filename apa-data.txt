@@ -1,0 +1,5 @@
+luck_chance	better_player_win_percent
+0	68.83316
+20	34.095
+40	8.795166
+50	3.112793

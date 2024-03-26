@@ -1,0 +1,5 @@
+luck_chance	better_player_win_percent
+0	56.632233
+20	43.32428
+40	26.911163
+50	18.448639
