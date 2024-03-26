@@ -4,7 +4,7 @@ This repository simulates and explores the effects of luck on winning
 percentages in Nine Ball, comparing and contrasting different rule sets to see
 the effect the rule set has on those luck effects.
 
-See[[https://jm.dev/amplifying-returns-of-luck-in-apa-nine-ball][ The Amplifying Returns Of Luck In APA Nine Ball]] for a writeup on these
+See [[https://jm.dev/amplifying-returns-of-luck-in-apa-nine-ball][The Amplifying Returns Of Luck In APA Nine Ball]] for a writeup on these
 simulations and the data.
 
 #+CAPTION: Better player winning percentage, set-match nine ball rules
