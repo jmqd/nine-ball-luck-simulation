@@ -286,7 +286,7 @@ fn main() -> Result<(), Error> {
 
     for pct in [0.00, 0.20, 0.40, 0.50].into_iter() {
         let mut count: HashMap<String, u32> = HashMap::new();
-        for _ in 0..32768 {
+        for _ in 0..131072 {
             *count
                 .entry(nine_ball_apa_rules_simulation_alice_vs_john(
                     pct,
@@ -311,7 +311,7 @@ fn main() -> Result<(), Error> {
     for pct in [0.00, 0.20, 0.40, 0.50].into_iter() {
         let mut count: HashMap<String, u32> = HashMap::new();
         let mut starting_player = 0;
-        for _ in 0..32768 {
+        for _ in 0..131072 {
             *count
                 .entry(normal_nine_ball_simulation_alice_vs_john(
                     pct,
