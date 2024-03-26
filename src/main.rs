@@ -5,6 +5,9 @@ use simul::message::Interrupt;
 use simul::message::Message;
 use simul::*;
 use std::collections::HashMap;
+use std::fs::File;
+use std::io::Error;
+use std::io::Write;
 
 #[derive(Debug, Clone)]
 struct NineBallPlayer<const N: usize> {
@@ -274,12 +277,12 @@ fn nine_ball_apa_rules_simulation_alice_vs_john(
         .unwrap()
 }
 
-fn main() {
+fn main() -> Result<(), Error> {
     // To vary who "breaks" first, we pass in a starting player, 0 or 1.
     let mut starting_player: usize = 0;
 
-    eprintln!("Normal 9-ball");
-    println!("luck_chance\tbetter_player_win_percent");
+    let mut w = File::create("apa-data.txt")?;
+    writeln!(&mut w, "luck_chance\tbetter_player_win_percent")?;
 
     for pct in [0.00, 0.20, 0.40, 0.50].into_iter() {
         let mut count: HashMap<String, u32> = HashMap::new();
@@ -294,15 +297,16 @@ fn main() {
             starting_player ^= 1;
         }
 
-        println!(
+        writeln!(
+            &mut w,
             "{}\t{}",
             pct * 100.0,
             (count["alice"] as f32 / (count["alice"] + count["john"]) as f32) * 100.0
-        );
+        )?;
     }
 
-    eprintln!("Normal 9-ball");
-    println!("luck_chance\tbetter_player_win_percent");
+    let mut w = File::create("set-match-data.txt")?;
+    writeln!(&mut w, "luck_chance\tbetter_player_win_percent")?;
 
     for pct in [0.00, 0.20, 0.40, 0.50].into_iter() {
         let mut count: HashMap<String, u32> = HashMap::new();
@@ -318,10 +322,13 @@ fn main() {
             starting_player ^= 1;
         }
 
-        println!(
+        writeln!(
+            &mut w,
             "{}\t{}",
             pct * 100.0,
             (count["alice"] as f32 / (count["alice"] + count["john"]) as f32) * 100.0
-        );
+        )?;
     }
+
+    Ok(())
 }
